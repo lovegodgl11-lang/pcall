@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Navrose stitching point pc</title><meta name="title" content="Navrose stitching point pc"><meta name="description" content="Window 10 style "><meta charset="UTF-8">
+<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Window 10 </title><meta name="title" content="Window 10 "><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="./style.css"><script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.10.0/dist/es-module-shims.js" async=""></script><script type="importmap">{
   "imports": {}
 }</script></head><body>
+
 
 
 
@@ -112,6 +113,7 @@
             width: 28px; height: 28px; border: none; background: none; font-size: 16px; font-weight: bold; cursor: pointer; color: #fff; border-radius: 4px; transition: background-color 0.2s;
         }
         .window .window-controls .minimize:hover { background-color: #4a5568; }
+        .window .window-controls .refresh:hover { background-color: #4a5568; }
         .window .window-controls .maximize:hover { background-color: #4a5568; }
         .window .window-controls .close:hover { background-color: #e53e3e; }
         .window .window-body { flex-grow: 1; position: relative; }
@@ -299,6 +301,7 @@
                 <span class="title">Window</span>
                 <div class="window-controls">
                     <button class="minimize" title="Minimize">_</button>
+                    <button class="refresh" title="Refresh">↻</button>
                     <button class="maximize" title="Maximize">□</button>
                     <button class="close" title="Close">×</button>
                 </div>
@@ -549,6 +552,13 @@
             win.querySelector('.close').addEventListener('click', () => closeWindow(id));
             win.querySelector('.minimize').addEventListener('click', () => minimizeWindow(id));
             win.querySelector('.maximize').addEventListener('click', () => toggleMaximizeWindow(id));
+            win.querySelector('.refresh').addEventListener('click', () => {
+                const iframe = win.querySelector('iframe');
+                if (iframe) {
+                    // Using reload(true) forces a reload from the server, bypassing the cache.
+                    iframe.contentWindow.location.reload(true);
+                }
+            });
             titleBar.addEventListener('dblclick', () => toggleMaximizeWindow(id));
             
             const startAction = (e, type) => {
