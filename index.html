@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Window 10 </title><meta name="title" content="Window 10 "><meta charset="UTF-8">
+<html lang="en" class=""><head><script>window.livecodes = window.livecodes || {};</script><title>Navrose stitching point pc</title><meta name="title" content="Navrose stitching point pc"><meta name="description" content="Window 10 style "><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="./style.css"><script src="https://cdn.jsdelivr.net/npm/es-module-shims@1.10.0/dist/es-module-shims.js" async=""></script><script type="importmap">{
   "imports": {}
 }</script></head><body>
+
+
 
 
 
@@ -85,11 +87,12 @@
             flex-direction: column;
             min-width: 320px;
             min-height: 240px;
-            resize: both;
-            overflow: auto; /* Changed from hidden to auto for resize handles */
+            overflow: hidden;
+            transition: top 0.3s ease, left 0.3s ease, width 0.3s ease, height 0.3s ease;
         }
         .window.maximized {
             top: 0 !important; left: 0 !important; width: 100% !important; height: calc(100% - 40px) !important; resize: none; border-radius: 0;
+            transition: none;
         }
         .window .title-bar {
             background-color: #2d3748; /* Darker title bar */
@@ -115,6 +118,29 @@
         .window .window-body iframe {
             width: 100%; height: 100%; border: none;
         }
+        .resizer {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            right: 0;
+            bottom: 0;
+            cursor: nwse-resize;
+            z-index: 5;
+        }
+        .resizer::after {
+            content: '';
+            position: absolute;
+            right: 3px;
+            bottom: 3px;
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid rgba(0,0,0,0.4);
+            border-bottom: 2px solid rgba(0,0,0,0.4);
+            opacity: 0.8;
+        }
+        .window.maximized .resizer {
+            display: none;
+        }
         #taskbar {
             position: absolute;
             bottom: 0;
@@ -127,7 +153,12 @@
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0 8px;
+        }
+        #taskbar-items {
+            display: flex;
+            align-items: center;
         }
         .taskbar-item {
             background-color: rgba(255, 255, 255, 0.1);
@@ -143,6 +174,36 @@
         .taskbar-item.active {
             background-color: rgba(255, 255, 255, 0.25);
             border-bottom: 3px solid #38b2ac; /* Teal color */
+        }
+
+        #tiling-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tiling-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 4px;
+            width: 32px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tiling-btn:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+        .tiling-btn.active {
+             background-color: rgba(56, 178, 172, 0.5); /* Teal */
+             border-color: rgba(56, 178, 172, 1);
+        }
+        .tiling-btn svg {
+            width: 20px;
+            height: 20px;
         }
 
         #context-menu {
@@ -180,13 +241,33 @@
             height: 18px;
         }
     </style>
+<link rel="stylesheet" href="/index.css">
 
 
 
     <div id="desktop"></div>
 
     <div id="taskbar">
-        <!-- Taskbar items will be added here -->
+        <div id="taskbar-items">
+            <!-- Taskbar items will be added here -->
+        </div>
+        <div id="tiling-controls">
+            <button class="tiling-btn" id="tile-focus" title="Focus Mode (1 window)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="1" ry="1"></rect></svg>
+            </button>
+             <button class="tiling-btn" id="tile-vertical" title="Vertical Split (2 windows)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="8" rx="1"></rect><rect x="3" y="13" width="18" height="8" rx="1"></rect></svg>
+            </button>
+            <button class="tiling-btn" id="tile-horizontal" title="Horizontal Split (2 windows)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="18" rx="1"></rect><rect x="13" y="3" width="8" height="18" rx="1"></rect></svg>
+            </button>
+            <button class="tiling-btn" id="tile-three-panel" title="Three-Panel Layout (3 windows)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="18" height="8" rx="1"></rect></svg>
+            </button>
+            <button class="tiling-btn" id="tile-quadrant" title="Quadrant Layout (4 windows)">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="13" width="8" height="8" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect></svg>
+            </button>
+        </div>
     </div>
     
     <div id="context-menu">
@@ -225,6 +306,7 @@
             <div class="window-body">
                 <iframe src="" frameborder="0"></iframe>
             </div>
+            <div class="resizer"></div>
         </div>
     </template>
 
@@ -239,7 +321,7 @@
         
         let db;
         const desktop = document.getElementById('desktop');
-        const taskbar = document.getElementById('taskbar');
+        const taskbarItems = document.getElementById('taskbar-items');
         const contextMenu = document.getElementById('context-menu');
         
         let openWindows = new Map();
@@ -247,6 +329,57 @@
         let activeWindowId = null;
         let currentLinkData = null;
 
+        // --- Centralized Drag & Resize State ---
+        let actionState = {
+            active: false,
+            type: null, // 'drag' or 'resize'
+            target: null,
+            startX: 0,
+            startY: 0,
+            initialLeft: 0,
+            initialTop: 0,
+            initialWidth: 0,
+            initialHeight: 0
+        };
+
+        // --- Global Event Handlers for Drag/Resize ---
+        function handleActionMove(e) {
+            if (!actionState.active) return;
+            e.preventDefault();
+
+            if (actionState.type === 'drag') {
+                const dx = e.clientX - actionState.startX;
+                const dy = e.clientY - actionState.startY;
+                actionState.target.style.left = `${actionState.initialLeft + dx}px`;
+                actionState.target.style.top = `${actionState.initialTop + dy}px`;
+            } else if (actionState.type === 'resize') {
+                const dw = e.clientX - actionState.startX;
+                const dh = e.clientY - actionState.startY;
+                const newWidth = actionState.initialWidth + dw;
+                const newHeight = actionState.initialHeight + dh;
+                const minWidth = parseInt(getComputedStyle(actionState.target).minWidth, 10);
+                const minHeight = parseInt(getComputedStyle(actionState.target).minHeight, 10);
+                
+                if (newWidth >= minWidth) actionState.target.style.width = `${newWidth}px`;
+                if (newHeight >= minHeight) actionState.target.style.height = `${newHeight}px`;
+            }
+        }
+
+        function handleActionEnd(e) {
+            if (!actionState.active) return;
+            const overlay = document.getElementById('global-action-overlay');
+            if (overlay) {
+                overlay.remove();
+            }
+            actionState.active = false;
+            actionState.target = null;
+        }
+
+        window.addEventListener('mousemove', handleActionMove);
+        window.addEventListener('mouseup', handleActionEnd);
+        window.addEventListener('mouseleave', handleActionEnd); // Handle mouse leaving the browser window
+
+        // --- Core Functions ---
         function getFaviconUrl(url) {
             try {
                 const domain = new URL(url).hostname;
@@ -270,10 +403,9 @@
         
         function showContextMenu(event, linkData) {
             event.preventDefault();
-            event.stopPropagation(); // <-- CRITICAL FIX: Prevents document click from firing immediately
+            event.stopPropagation();
             contextMenu.style.display = 'block';
             
-            // Adjust position if it's too close to the edge
             const menuWidth = contextMenu.offsetWidth;
             const menuHeight = contextMenu.offsetHeight;
             const viewportWidth = window.innerWidth;
@@ -282,12 +414,8 @@
             let left = event.clientX;
             let top = event.clientY;
 
-            if (left + menuWidth > viewportWidth) {
-                left = viewportWidth - menuWidth - 10;
-            }
-            if (top + menuHeight > viewportHeight) {
-                top = viewportHeight - menuHeight - 10;
-            }
+            if (left + menuWidth > viewportWidth) left = viewportWidth - menuWidth - 10;
+            if (top + menuHeight > viewportHeight) top = viewportHeight - menuHeight - 10;
             
             contextMenu.style.left = `${left}px`;
             contextMenu.style.top = `${top}px`;
@@ -328,22 +456,30 @@
             win.querySelector('.title').textContent = title;
             win.querySelector('iframe').src = url;
 
+            const initialWidth = 800;
+            const initialHeight = 600;
+            win.style.width = `${initialWidth}px`;
+            win.style.height = `${initialHeight}px`;
+
+            const viewportHeight = window.innerHeight - 40;
+            const viewportWidth = window.innerWidth;
+            const top = 50 + (openWindows.size * 25) % Math.max(1, viewportHeight - initialHeight);
+            const left = 100 + (openWindows.size * 25) % Math.max(1, viewportWidth - initialWidth);
+            win.style.top = `${top}px`;
+            win.style.left = `${left}px`;
+            
             document.body.appendChild(win);
             
             const windowData = { element: win, minimized: false, savedState: {} };
             openWindows.set(id, windowData);
             
-            makeDraggable(win.querySelector('.title-bar'), win);
-            setupWindowControls(id, win);
+            setupWindowInteractions(id, win);
             addToTaskbar(id, title);
             focusWindow(id);
-
-            win.style.top = `${50 + (openWindows.size * 20) % (window.innerHeight - 300)}px`;
-            win.style.left = `${100 + (openWindows.size * 20) % (window.innerWidth - 400)}px`;
         }
 
         function focusWindow(id) {
-            if (activeWindowId) {
+            if (activeWindowId && activeWindowId !== id) {
                 const oldActive = openWindows.get(activeWindowId);
                 if(oldActive) {
                     oldActive.element.style.zIndex = zIndexCounter - 1;
@@ -356,7 +492,8 @@
                 document.getElementById(`taskbar-${id}`)?.classList.add('active');
                 activeWindowId = id;
 
-                if(windowData.minimized) {
+                const wasMinimized = windowData.minimized;
+                if(wasMinimized) {
                     windowData.element.style.display = 'flex';
                     windowData.minimized = false;
                 }
@@ -378,39 +515,76 @@
                 windowData.element.style.display = 'none';
                 windowData.minimized = true;
                 document.getElementById(`taskbar-${id}`)?.classList.remove('active');
-                activeWindowId = null;
+                if (activeWindowId === id) {
+                    activeWindowId = null;
+                }
             }
         }
         
         function toggleMaximizeWindow(id) {
             const windowData = openWindows.get(id);
             if(windowData) {
-                if(windowData.element.classList.contains('maximized')) {
-                    // Restore
-                    windowData.element.classList.remove('maximized');
-                    windowData.element.style.top = windowData.savedState.top;
-                    windowData.element.style.left = windowData.savedState.left;
-                    windowData.element.style.width = windowData.savedState.width;
-                    windowData.element.style.height = windowData.savedState.height;
+                const win = windowData.element;
+                if(win.classList.contains('maximized')) {
+                    win.classList.remove('maximized');
+                    Object.assign(win.style, windowData.savedState);
                 } else {
-                    // Maximize
                     windowData.savedState = {
-                        top: windowData.element.style.top,
-                        left: windowData.element.style.left,
-                        width: windowData.element.style.width,
-                        height: windowData.element.style.height
+                        top: win.style.top,
+                        left: win.style.left,
+                        width: win.style.width,
+                        height: win.style.height
                     };
-                    windowData.element.classList.add('maximized');
+                    win.classList.add('maximized');
                 }
             }
         }
 
-        function setupWindowControls(id, win) {
-            win.addEventListener('mousedown', () => focusWindow(id));
+        function setupWindowInteractions(id, win) {
+            const titleBar = win.querySelector('.title-bar');
+            const resizer = win.querySelector('.resizer');
+            
+            win.addEventListener('mousedown', () => focusWindow(id), true); // Use capture phase
+            
             win.querySelector('.close').addEventListener('click', () => closeWindow(id));
             win.querySelector('.minimize').addEventListener('click', () => minimizeWindow(id));
             win.querySelector('.maximize').addEventListener('click', () => toggleMaximizeWindow(id));
-            win.querySelector('.title-bar').addEventListener('dblclick', () => toggleMaximizeWindow(id));
+            titleBar.addEventListener('dblclick', () => toggleMaximizeWindow(id));
+            
+            const startAction = (e, type) => {
+                if ((type === 'drag' && e.target.tagName === 'BUTTON') || win.classList.contains('maximized')) return;
+                e.preventDefault();
+                focusWindow(id);
+                
+                actionState.active = true;
+                actionState.type = type;
+                actionState.target = win;
+                actionState.startX = e.clientX;
+                actionState.startY = e.clientY;
+
+                const style = window.getComputedStyle(win);
+                if (type === 'drag') {
+                    actionState.initialLeft = parseInt(style.left, 10) || 0;
+                    actionState.initialTop = parseInt(style.top, 10) || 0;
+                } else {
+                    actionState.initialWidth = parseInt(style.width, 10);
+                    actionState.initialHeight = parseInt(style.height, 10);
+                }
+                
+                const overlay = document.createElement('div');
+                overlay.id = 'global-action-overlay';
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 100vw; height: 100vh;
+                    z-index: 10000;
+                    cursor: ${type === 'drag' ? 'move' : 'nwse-resize'};
+                `;
+                document.body.appendChild(overlay);
+            };
+            
+            titleBar.addEventListener('mousedown', (e) => startAction(e, 'drag'));
+            resizer.addEventListener('mousedown', (e) => startAction(e, 'resize'));
         }
 
         function addToTaskbar(id, title) {
@@ -420,40 +594,99 @@
             item.textContent = title.substring(0, 15) + (title.length > 15 ? '…' : '');
             item.title = title;
             item.addEventListener('click', () => focusWindow(id));
-            taskbar.appendChild(item);
+            taskbarItems.appendChild(item);
+        }
+        
+        function applyLayout(layoutType) {
+            const visibleWindows = Array.from(openWindows.values()).filter(w => !w.minimized);
+            if (visibleWindows.length === 0) return;
+
+            const desktopWidth = window.innerWidth;
+            const desktopHeight = window.innerHeight - 40;
+            const gap = 8;
+
+            const applyStyles = (win, styles) => {
+                win.element.classList.remove('maximized');
+                Object.assign(win.element.style, styles);
+            };
+
+            switch(layoutType) {
+                case 'focus': {
+                    const target = activeWindowId ? openWindows.get(activeWindowId) : visibleWindows[0];
+                    if (target) {
+                        applyStyles(target, { top: `0px`, left: `0px`, width: `${desktopWidth}px`, height: `${desktopHeight}px` });
+                        visibleWindows.forEach(w => {
+                            if (w !== target) minimizeWindow(w.element.id.replace('window-', ''));
+                        });
+                    }
+                    break;
+                }
+                case 'horizontal-split': {
+                    const targets = visibleWindows.slice(0, 2);
+                    if (targets.length === 0) break;
+                    
+                    const width = (desktopWidth - 3 * gap) / 2;
+                    const height = desktopHeight - 2 * gap;
+                    
+                    if (targets[0]) applyStyles(targets[0], { top: `${gap}px`, left: `${gap}px`, width: `${width}px`, height: `${height}px` });
+                    if (targets[1]) applyStyles(targets[1], { top: `${gap}px`, left: `${width + 2 * gap}px`, width: `${width}px`, height: `${height}px` });
+                    
+                    visibleWindows.slice(2).forEach(w => minimizeWindow(w.element.id.replace('window-', '')));
+                    break;
+                }
+                case 'vertical-split': {
+                    const targets = visibleWindows.slice(0, 2);
+                     if (targets.length === 0) break;
+
+                    const width = desktopWidth - 2 * gap;
+                    const height = (desktopHeight - 3 * gap) / 2;
+                    
+                    if (targets[0]) applyStyles(targets[0], { top: `${gap}px`, left: `${gap}px`, width: `${width}px`, height: `${height}px` });
+                    if (targets[1]) applyStyles(targets[1], { top: `${height + 2 * gap}px`, left: `${gap}px`, width: `${width}px`, height: `${height}px` });
+
+                    visibleWindows.slice(2).forEach(w => minimizeWindow(w.element.id.replace('window-', '')));
+                    break;
+                }
+                case 'three-panel': {
+                    const targets = visibleWindows.slice(0, 3);
+                    if (targets.length === 0) break;
+
+                    const topHeight = (desktopHeight - 3 * gap) / 2;
+                    const topWidth = (desktopWidth - 3 * gap) / 2;
+                    const bottomHeight = topHeight;
+                    const bottomWidth = desktopWidth - 2 * gap;
+
+                    // Top two windows
+                    if (targets[0]) applyStyles(targets[0], { top: `${gap}px`, left: `${gap}px`, width: `${topWidth}px`, height: `${topHeight}px` });
+                    if (targets[1]) applyStyles(targets[1], { top: `${gap}px`, left: `${topWidth + 2 * gap}px`, width: `${topWidth}px`, height: `${topHeight}px` });
+
+                    // Bottom window
+                    if (targets[2]) applyStyles(targets[2], { top: `${topHeight + 2 * gap}px`, left: `${gap}px`, width: `${bottomWidth}px`, height: `${bottomHeight}px` });
+                    
+                    // Minimize the rest
+                    visibleWindows.slice(3).forEach(w => minimizeWindow(w.element.id.replace('window-', '')));
+                    break;
+                }
+                case 'quadrant': {
+                    const targets = visibleWindows.slice(0, 4);
+                    if (targets.length === 0) break;
+                    
+                    const width = (desktopWidth - 3 * gap) / 2;
+                    const height = (desktopHeight - 3 * gap) / 2;
+                    
+                    if (targets[0]) applyStyles(targets[0], { top: `${gap}px`, left: `${gap}px`, width: `${width}px`, height: `${height}px` });
+                    if (targets[1]) applyStyles(targets[1], { top: `${gap}px`, left: `${width + 2 * gap}px`, width: `${width}px`, height: `${height}px` });
+                    if (targets[2]) applyStyles(targets[2], { top: `${height + 2 * gap}px`, left: `${gap}px`, width: `${width}px`, height: `${height}px` });
+                    if (targets[3]) applyStyles(targets[3], { top: `${height + 2 * gap}px`, left: `${width + 2 * gap}px`, width: `${width}px`, height: `${height}px` });
+                    
+                    visibleWindows.slice(4).forEach(w => minimizeWindow(w.element.id.replace('window-', '')));
+                    break;
+                }
+            }
         }
 
-        function makeDraggable(dragHandle, elmnt) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            dragHandle.onmousedown = dragMouseDown;
 
-            function dragMouseDown(e) {
-                if (e.target.tagName === 'BUTTON' || elmnt.classList.contains('maximized')) return;
-                e = e || window.event;
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
-
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
-
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -483,9 +716,16 @@
                     openLink(button.dataset.action);
                 }
             });
+            
+            // Tiling controls listeners
+            document.getElementById('tile-focus').addEventListener('click', () => applyLayout('focus'));
+            document.getElementById('tile-vertical').addEventListener('click', () => applyLayout('vertical-split'));
+            document.getElementById('tile-horizontal').addEventListener('click', () => applyLayout('horizontal-split'));
+            document.getElementById('tile-three-panel').addEventListener('click', () => applyLayout('three-panel'));
+            document.getElementById('tile-quadrant').addEventListener('click', () => applyLayout('quadrant'));
         });
     </script>
 
-
+<script type="module" src="/index.tsx"></script>
 
 <script src="./script.js"></script></body></html>
